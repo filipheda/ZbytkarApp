@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { TimerOverlay } from '../components/TimerOverlay';
 import { ChefHat, Clock, ArrowLeft, ArrowRight, Play, Pause, RotateCcw } from 'lucide-react';
 import { Header } from '../components/Header';
 import { BottomNav } from '../components/BottomNav';
@@ -8,7 +9,16 @@ export const CookingMode = ({ currentRoute, navigate, selectedRecipe }) => {
   const [timer, setTimer] = useState(0);
   const [timerActive, setTimerActive] = useState(false);
   const [timerTarget, setTimerTarget] = useState(0);
+  const [showTimer, setShowTimer] = useState(false);
+  const [timerDuration, setTimerDuration] = useState(0);
 
+  const handleTimerRequest = (stepIndex) => {
+  const suggestedTime = selectedRecipe.instructions[stepIndex].time;
+  if (suggestedTime) {
+    setTimerDuration(suggestedTime);
+    setShowTimer(true);
+  }
+};
   useEffect(() => {
     let interval = null;
     if (timerActive && timer > 0) {
@@ -250,7 +260,74 @@ export const CookingMode = ({ currentRoute, navigate, selectedRecipe }) => {
 
       <BottomNav currentRoute={currentRoute} navigate={navigate} />
     </div>
+    
   );
+  
 };
 
 export default CookingMode;
+
+
+const handleTimerRequest = (stepIndex) => {
+  const suggestedTime = selectedRecipe.instructions[stepIndex].time;
+  if (suggestedTime) {
+    setTimerDuration(suggestedTime);
+    setShowTimer(true);
+  }
+};
+
+// V JSX uprav část s kroky:
+<div className="space-y-4">
+  {selectedRecipe.instructions.map((step, index) => (
+    <div 
+      key={index}
+      className={`p-4 rounded-lg border ${
+        index === currentStep 
+          ? 'border-green-200 bg-green-50' 
+          : 'border-gray-200 bg-white'
+      }`}
+    >
+      <div className="flex items-start gap-4">
+        <div className="flex-shrink-0 w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+          {index + 1}
+        </div>
+        <div className="flex-1">
+          <p className="text-gray-800">{step.text}</p>
+          {step.time && (
+            <button
+              onClick={() => handleTimerRequest(index)}
+              className="mt-2 inline-flex items-center gap-1 text-sm text-green-600 hover:text-green-700"
+            >
+              <Clock className="w-4 h-4" />
+              Nastavit timer na {step.time} sekund
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  ))}
+  
+  {/* Navigační tlačítka */}
+  <div className="flex gap-2 mt-6">
+    <button
+      onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
+      className="px-4 py-2 bg-gray-100 rounded-md hover:bg-gray-200"
+    >
+      Předchozí krok
+    </button>
+    <button
+      onClick={() => setCurrentStep(Math.min(selectedRecipe.instructions.length - 1, currentStep + 1))}
+      className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+    >
+      Další krok
+    </button>
+  </div>
+</div>
+
+{/* Přidej na konec JSX */}
+{showTimer && (
+  <TimerOverlay 
+    initialTime={timerDuration}
+    onClose={() => setShowTimer(false)}
+  />
+)}

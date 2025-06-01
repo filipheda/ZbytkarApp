@@ -24,12 +24,17 @@ export const mockData = {
       match: 80,
       missingIngredients: ['Sýr (100g)', 'Bazalka (1 svazek)'],
       tags: ['Rychlé', 'Vegetariánské'],
-      instructions: [
-        'Přiveďte velký hrnec vody k varu. Přidejte sůl a těstoviny.',
-        'Vařte podle návodu na obalu, dokud nebudou al dente (obvykle 8-10 minut).',
-        'Nakrájejte rajčata na kostičky a cibuli na tenké plátky.',
-        'Smíchejte všechny ingredience a podávejte.'
-      ]
+   instructions: [
+  {
+    text: 'Přiveďte velký hrnec vody k varu. Přidejte sůl a těstoviny.',
+    time: 600 // čas v sekundách
+  },
+  {
+    text: 'Vařte podle návodu na obalu, dokud nebudou al dente (obvykle 8-10 minut).',
+    time: 480
+  },
+  // ...
+]
     },
     {
       id: 2,
@@ -45,6 +50,7 @@ export const mockData = {
         'Rozehřejte olivový olej na pánvi a osmažte cibuli.',
         'Přidejte česnek a rajčata, vařte 20 minut.',
         'Dochuťte solí a pepřem.'
+        
       ]
     },
     {
